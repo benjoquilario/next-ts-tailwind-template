@@ -1,10 +1,8 @@
-'use client';
+"use client"
 
-import { useSearchParams } from 'next/navigation';
-
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { login } from '@/server/auth';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { login } from "@/server/auth"
 // import { signInDefaultValues } from '@/lib/constant';
 import {
   Form,
@@ -13,39 +11,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { AuthUsers, userAuthSchema } from '@/lib/validator/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+} from "@/components/ui/form"
+import { AuthUsers, userAuthSchema } from "@/lib/validator/auth"
+import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
+import { useForm } from "react-hook-form"
 
 export default function SignInForm() {
   const form = useForm<AuthUsers>({
     resolver: zodResolver(userAuthSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  });
+  })
 
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
-
-  const { setError, formState } = form;
+  const { setError, formState } = form
 
   const submit = async (values: AuthUsers) => {
-    const res = await login(values);
+    const res = await login(values)
 
-    if (res.success) window.location.href = '/';
+    if (res.success) window.location.href = "/"
     else {
-      if (res.error) setError('password', { message: res.error });
+      if (res.error) setError("password", { message: res.error })
     }
-  };
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
-        <Input type="hidden" name="callbackUrl" value={callbackUrl} />
         <FormField
           control={form.control}
           name="email"
@@ -90,7 +84,7 @@ export default function SignInForm() {
         </div>
 
         <div className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?{" "}
           <Link
             // target="_self"
             className="link"
@@ -101,5 +95,5 @@ export default function SignInForm() {
         </div>
       </form>
     </Form>
-  );
+  )
 }
